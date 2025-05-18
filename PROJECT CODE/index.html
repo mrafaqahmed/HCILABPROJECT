@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal File Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for animations and transitions */
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .file-drop-area {
+            border: 2px dashed #ccc;
+            transition: all 0.3s;
+        }
+        .file-drop-area.active {
+            border-color: #4F46E5;
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" onclick="showHomePage()" class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-exchange-alt text-indigo-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">Universal Converter</span>
+                    </a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <button onclick="showHomePage()" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition">Home</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Home Page -->
+        <div id="homePage" class="fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Convert Files Effortlessly</h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Transform your documents between various formats with our fast, secure, and easy-to-use file converter.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- PDF to Word -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('pdf-to-word', 'PDF to Word', 'pdf', 'docx')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-pdf text-indigo-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">PDF to Word</h3>
+                                <p class="text-gray-500 text-sm">Convert PDF files to editable Word documents</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.pdf → .docx</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Word to PDF -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('word-to-pdf', 'Word to PDF', 'doc,docx', 'pdf')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-word text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Word to PDF</h3>
+                                <p class="text-gray-500 text-sm">Convert Word documents to PDF files</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.doc/.docx → .pdf</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF to PowerPoint -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('pdf-to-ppt', 'PDF to PowerPoint', 'pdf', 'pptx')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-red-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-pdf text-red-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">PDF to PowerPoint</h3>
+                                <p class="text-gray-500 text-sm">Convert PDF files to editable PowerPoint presentations</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.pdf → .pptx</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PowerPoint to PDF -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('ppt-to-pdf', 'PowerPoint to PDF', 'ppt,pptx', 'pdf')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-orange-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-powerpoint text-orange-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">PowerPoint to PDF</h3>
+                                <p class="text-gray-500 text-sm">Convert PowerPoint presentations to PDF files</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.ppt/.pptx → .pdf</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF to Excel -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('pdf-to-excel', 'PDF to Excel', 'pdf', 'xlsx')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-pdf text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">PDF to Excel</h3>
+                                <p class="text-gray-500 text-sm">Convert PDF files to editable Excel spreadsheets</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.pdf → .xlsx</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Excel to PDF -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('excel-to-pdf', 'Excel to PDF', 'xls,xlsx', 'pdf')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-emerald-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-excel text-emerald-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Excel to PDF</h3>
+                                <p class="text-gray-500 text-sm">Convert Excel spreadsheets to PDF files</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.xls/.xlsx → .pdf</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JPG to PDF -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover" onclick="showConverterPage('jpg-to-pdf', 'JPG to PDF', 'jpg,jpeg,png', 'pdf')">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-image text-yellow-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">JPG to PDF</h3>
+                                <p class="text-gray-500 text-sm">Convert image files to PDF documents</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sm text-gray-500">.jpg/.png → .pdf</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">How it works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-upload text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900">1. Upload File</h3>
+                            <p class="text-gray-600 mt-1">Select your file or drag and drop it into the upload area.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-cog text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900">2. Convert</h3>
+                            <p class="text-gray-600 mt-1">Our system will process your file and convert it to the desired format.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-download text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900">3. Download</h3>
+                            <p class="text-gray-600 mt-1">Download your converted file instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Converter Page -->
+        <div id="converterPage" class="hidden fade-in">
+            <div class="flex items-center mb-6">
+                <button onclick="showHomePage()" class="mr-4 text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 id="converterTitle" class="text-2xl font-bold text-gray-900"></h1>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div id="uploadSection">
+                    <div class="file-drop-area rounded-lg p-8 text-center mb-4" id="fileDropArea">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-indigo-500 mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Drag & drop your file here</h3>
+                        <p class="text-gray-500 mb-4">or</p>
+                        <label for="fileInput" class="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                            Select File
+                        </label>
+                        <input type="file" id="fileInput" class="hidden" accept="">
+                        <p id="fileTypeInfo" class="text-sm text-gray-500 mt-4"></p>
+                    </div>
+                    <div id="selectedFileInfo" class="hidden">
+                        <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-file text-indigo-500 text-xl mr-3"></i>
+                                <div>
+                                    <p id="fileName" class="font-medium text-gray-900"></p>
+                                    <p id="fileSize" class="text-sm text-gray-500"></p>
+                                </div>
+                            </div>
+                            <button onclick="removeFile()" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="conversionOptions" class="mt-6 hidden">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Conversion Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Output Format</label>
+                            <select id="outputFormat" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quality</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option>Best (recommended)</option>
+                                <option>Good</option>
+                                <option>Normal</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="actionButtons" class="mt-6 hidden">
+                    <button id="convertBtn" onclick="startConversion()" class="w-full bg-indigo-600 text-white px-4 py-3 rounded-md hover:bg-indigo-700 transition font-medium">
+                        Convert Now
+                    </button>
+                </div>
+            </div>
+
+            <div id="conversionProgress" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Conversion in Progress</h3>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progressBar" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-sm text-gray-600 mt-2">Preparing your file...</p>
+            </div>
+
+            <div id="conversionResult" class="hidden bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Conversion Complete!</h3>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Success</span>
+                </div>
+                <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg mb-4">
+                    <div class="flex items-center">
+                        <i id="resultFileIcon" class="fas fa-file text-indigo-500 text-xl mr-3"></i>
+                        <div>
+                            <p id="resultFileName" class="font-medium text-gray-900"></p>
+                            <p id="resultFileSize" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+                    <button onclick="downloadFile()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                        Download
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <button onclick="resetConverter()" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                        <i class="fas fa-redo mr-2"></i> Convert Another File
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">About This Conversion</h3>
+                <p id="conversionDescription" class="text-gray-600 mb-4"></p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-info-circle text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                <strong>Privacy Notice:</strong> Your files are processed securely and deleted from our servers after 1 hour. We don't store or share your documents.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center md:order-2 space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="mt-8 md:mt-0 md:order-1">
+                    <p class="text-center text-base text-gray-400">
+                        &copy; 2023 Universal Converter. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Current conversion type and file data
+        let currentConversion = {
+            type: '',
+            title: '',
+            fromFormat: '',
+            toFormat: '',
+            file: null
+        };
+
+        // Conversion descriptions
+        const conversionDescriptions = {
+            'pdf-to-word': 'Converting PDF to Word allows you to edit the content of your PDF document in Microsoft Word. This is useful when you need to modify text, formatting, or layout of a document that was originally in PDF format. The conversion preserves the original layout as much as possible.',
+            'word-to-pdf': 'Converting Word to PDF creates a fixed-layout document that preserves the formatting of your Word file. PDFs are ideal for sharing documents when you want to ensure the recipient sees the file exactly as you intended, regardless of the software or device they use.',
+            'pdf-to-ppt': 'Converting PDF to PowerPoint extracts the content from your PDF and creates editable slides. This is helpful when you need to modify or present content that was originally in PDF format. The conversion attempts to maintain the original layout and structure.',
+            'ppt-to-pdf': 'Converting PowerPoint to PDF creates a fixed-format version of your presentation that can be viewed on any device without requiring PowerPoint. This is ideal for sharing presentations when you want to ensure consistent appearance across different platforms.',
+            'pdf-to-excel': 'Converting PDF to Excel extracts tabular data from your PDF and creates an editable spreadsheet. This is useful when you need to work with data that was presented in a PDF table format. The conversion attempts to maintain the structure of tables in the original PDF.',
+            'excel-to-pdf': 'Converting Excel to PDF creates a fixed-format version of your spreadsheet that can be viewed on any device. This is ideal for sharing financial reports, data tables, or any spreadsheet content when you want to ensure the recipient sees the exact layout you designed.',
+            'jpg-to-pdf': 'Converting JPG to PDF creates a document containing your image. This is useful when you need to combine multiple images into a single document or when you want to ensure your image is displayed at a specific size. The PDF format also provides better compression options for images.'
+        };
+
+        // File type icons
+        const fileTypeIcons = {
+            'pdf': 'fa-file-pdf',
+            'doc': 'fa-file-word',
+            'docx': 'fa-file-word',
+            'ppt': 'fa-file-powerpoint',
+            'pptx': 'fa-file-powerpoint',
+            'xls': 'fa-file-excel',
+            'xlsx': 'fa-file-excel',
+            'jpg': 'fa-file-image',
+            'jpeg': 'fa-file-image',
+            'png': 'fa-file-image'
+        };
+
+        // File type colors
+        const fileTypeColors = {
+            'pdf': 'text-red-500',
+            'doc': 'text-blue-500',
+            'docx': 'text-blue-500',
+            'ppt': 'text-orange-500',
+            'pptx': 'text-orange-500',
+            'xls': 'text-green-500',
+            'xlsx': 'text-green-500',
+            'jpg': 'text-yellow-500',
+            'jpeg': 'text-yellow-500',
+            'png': 'text-yellow-500'
+        };
+
+        // DOM elements
+        const homePage = document.getElementById('homePage');
+        const converterPage = document.getElementById('converterPage');
+        const converterTitle = document.getElementById('converterTitle');
+        const fileDropArea = document.getElementById('fileDropArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileTypeInfo = document.getElementById('fileTypeInfo');
+        const selectedFileInfo = document.getElementById('selectedFileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const conversionOptions = document.getElementById('conversionOptions');
+        const outputFormat = document.getElementById('outputFormat');
+        const actionButtons = document.getElementById('actionButtons');
+        const convertBtn = document.getElementById('convertBtn');
+        const conversionProgress = document.getElementById('conversionProgress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const conversionResult = document.getElementById('conversionResult');
+        const resultFileIcon = document.getElementById('resultFileIcon');
+        const resultFileName = document.getElementById('resultFileName');
+        const resultFileSize = document.getElementById('resultFileSize');
+        const conversionDescription = document.getElementById('conversionDescription');
+
+        // Initialize drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            fileDropArea.classList.add('active');
+        }
+
+        function unhighlight() {
+            fileDropArea.classList.remove('active');
+        }
+
+        fileDropArea.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) {
+                handleFiles(files);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length) {
+                handleFiles(files);
+            }
+        }
+
+        function handleFiles(files) {
+            const file = files[0];
+            const fileExt = file.name.split('.').pop().toLowerCase();
+            const allowedExtensions = currentConversion.fromFormat.split(',');
+
+            if (!allowedExtensions.includes(fileExt)) {
+                alert(`Please select a ${currentConversion.fromFormat.toUpperCase()} file.`);
+                return;
+            }
+
+            currentConversion.file = file;
+            displayFileInfo(file);
+        }
+
+        function displayFileInfo(file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            
+            const fileExt = file.name.split('.').pop().toLowerCase();
+            const iconClass = fileTypeIcons[fileExt] || 'fa-file';
+            const iconColor = fileTypeColors[fileExt] || 'text-indigo-500';
+            
+            // Replace the icon in the selected file info
+            const fileIcon = selectedFileInfo.querySelector('.fa-file');
+            if (fileIcon) {
+                fileIcon.className = `fas ${iconClass} ${iconColor} text-xl mr-3`;
+            }
+            
+            selectedFileInfo.classList.remove('hidden');
+            fileDropArea.classList.add('hidden');
+            conversionOptions.classList.remove('hidden');
+            actionButtons.classList.remove('hidden');
+            
+            // Set up output format options
+            setupOutputFormatOptions();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function setupOutputFormatOptions() {
+            outputFormat.innerHTML = '';
+            const formats = currentConversion.toFormat.split(',');
+            
+            formats.forEach(format => {
+                const option = document.createElement('option');
+                option.value = format;
+                
+                // Get the display name for the format
+                let displayName;
+                switch(format) {
+                    case 'pdf': displayName = 'PDF Document'; break;
+                    case 'doc': displayName = 'Word Document (DOC)'; break;
+                    case 'docx': displayName = 'Word Document (DOCX)'; break;
+                    case 'ppt': displayName = 'PowerPoint (PPT)'; break;
+                    case 'pptx': displayName = 'PowerPoint (PPTX)'; break;
+                    case 'xls': displayName = 'Excel Spreadsheet (XLS)'; break;
+                    case 'xlsx': displayName = 'Excel Spreadsheet (XLSX)'; break;
+                    case 'jpg': displayName = 'JPEG Image'; break;
+                    default: displayName = format.toUpperCase();
+                }
+                
+                option.textContent = displayName;
+                outputFormat.appendChild(option);
+            });
+        }
+
+        function removeFile() {
+            currentConversion.file = null;
+            fileInput.value = '';
+            selectedFileInfo.classList.add('hidden');
+            fileDropArea.classList.remove('hidden');
+            conversionOptions.classList.add('hidden');
+            actionButtons.classList.add('hidden');
+        }
+
+        function startConversion() {
+            // Show progress bar
+            conversionProgress.classList.remove('hidden');
+            actionButtons.classList.add('hidden');
+            
+            // Simulate conversion progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress < 30) {
+                    progressText.textContent = 'Uploading file...';
+                } else if (progress < 60) {
+                    progressText.textContent = 'Processing content...';
+                } else if (progress < 90) {
+                    progressText.textContent = 'Finalizing conversion...';
+                } else {
+                    progressText.textContent = 'Almost done!';
+                }
+                
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(showConversionResult, 500);
+                }
+            }, 300);
+        }
+
+        function showConversionResult() {
+            conversionProgress.classList.add('hidden');
+            conversionResult.classList.remove('hidden');
+            
+            // Set result file info
+            const originalName = currentConversion.file.name;
+            const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
+            const newExt = outputFormat.value;
+            const newFileName = `${nameWithoutExt}.${newExt}`;
+            
+            resultFileName.textContent = newFileName;
+            
+            // Generate a random size for the converted file (for demo purposes)
+            const originalSize = currentConversion.file.size;
+            const newSize = Math.floor(originalSize * (0.8 + Math.random() * 0.4)); // 80-120% of original size
+            resultFileSize.textContent = formatFileSize(newSize);
+            
+            // Set the appropriate icon
+            const iconClass = fileTypeIcons[newExt] || 'fa-file';
+            const iconColor = fileTypeColors[newExt] || 'text-indigo-500';
+            resultFileIcon.className = `fas ${iconClass} ${iconColor} text-xl mr-3`;
+        }
+
+        function downloadFile() {
+            // In a real app, this would download the actual converted file
+            // For demo purposes, we'll just show an alert
+            alert('Download would start now in a real application. This is just a demo.');
+        }
+
+        function resetConverter() {
+            removeFile();
+            conversionResult.classList.add('hidden');
+            fileDropArea.classList.remove('hidden');
+        }
+
+        function showHomePage() {
+            homePage.classList.remove('hidden');
+            converterPage.classList.add('hidden');
+        }
+
+        function showConverterPage(type, title, fromFormat, toFormat) {
+            currentConversion = {
+                type,
+                title,
+                fromFormat,
+                toFormat,
+                file: null
+            };
+            
+            // Reset UI
+            removeFile();
+            conversionProgress.classList.add('hidden');
+            conversionResult.classList.add('hidden');
+            fileDropArea.classList.remove('hidden');
+            
+            // Update page
+            converterTitle.textContent = title;
+            fileTypeInfo.textContent = `Supported formats: ${fromFormat.toUpperCase()}`;
+            conversionDescription.textContent = conversionDescriptions[type] || '';
+            
+            // Set the accept attribute for the file input based on the fromFormat
+            const acceptTypes = fromFormat.split(',').map(ext => `.${ext}`).join(',');
+            fileInput.setAttribute('accept', acceptTypes);
+            
+            homePage.classList.add('hidden');
+            converterPage.classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
